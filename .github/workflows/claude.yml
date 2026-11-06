@@ -37,7 +37,7 @@ on:
         required: false
         type: string
         default: ''
-  pull_request_target:
+  pull_request:
     types: [opened, synchronize, reopened]
   pull_request_review_comment:
     types: [created]
@@ -66,7 +66,7 @@ jobs:
     runs-on: ubuntu-latest
     # Must exceed the Claude step timeout so finalize still runs after it
     timeout-minutes: 60
-    # issues/issue_comment/pull_request_target get read-only cache tokens by
+    # issues/issue_comment get read-only cache tokens by
     # default; saving the Claude session needs write. The action only saves for
     # OWNER/MEMBER/COLLABORATOR triggers, limiting poisoning risk
     cache-mode: write
@@ -79,7 +79,7 @@ jobs:
     steps:
       - name: Run Claude
         id: claude
-        uses: DavidWells/claude-runner-action@v1
+        uses: DavidWells/claude-runner-action@main
         timeout-minutes: 50
         with:
           claude-code-oauth-token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
@@ -92,11 +92,11 @@ jobs:
 
       - name: Label
         if: steps.claude.outputs.claude-outcome == 'success'
-        uses: DavidWells/claude-runner-action/labels@v1
+        uses: DavidWells/claude-runner-action/labels@main
 
       - name: Finalize
         if: always()
-        uses: DavidWells/claude-runner-action/finalize@v1
+        uses: DavidWells/claude-runner-action/finalize@main
         with:
           event-bus-url: ${{ secrets.EVENT_BUS_URL }}
           event-bus-api-key: ${{ secrets.EVENT_BUS_API_KEY }}
