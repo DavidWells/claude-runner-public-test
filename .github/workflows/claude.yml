@@ -76,7 +76,7 @@ jobs:
     steps:
       - name: Run Claude
         id: claude
-        uses: DavidWells/claude-runner-action@main
+        uses: DavidWells/claude-runner-action@v1
         timeout-minutes: 50
         with:
           claude-code-oauth-token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
@@ -89,11 +89,11 @@ jobs:
 
       - name: Label
         if: steps.claude.outputs.claude-outcome == 'success'
-        uses: DavidWells/claude-runner-action/labels@main
+        uses: DavidWells/claude-runner-action/labels@v1
 
       - name: Finalize
         if: always()
-        uses: DavidWells/claude-runner-action/finalize@main
+        uses: DavidWells/claude-runner-action/finalize@v1
         with:
           event-bus-url: ${{ secrets.EVENT_BUS_URL }}
           event-bus-api-key: ${{ secrets.EVENT_BUS_API_KEY }}
